@@ -1,0 +1,15 @@
+# MusicKit private key — never commit this, Apple only lets you download it once
+*.p8
+
+# build output
+/build/
+/musickit
+
+# generated
+musickit-match-report.tsv
+bench.txt
+bench-new.txt
+cover.out
+coverage.html
+
+.DS_Store
