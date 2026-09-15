@@ -1,105 +1,65 @@
 # Agents Context
 
-This file provides guidance to AI agents when working with code in this repository.
-
-## Project Overview
-
-`musickit` is a single-binary CLI for managing Apple Music playlists: search the catalogue, list,
-show, export, create, add, remove, rename and delete. Go 1.26, one external module (Kong, for the
-command grammar).
-
-## Layout
-
-```
-cmd/musickit/       main; SETUP doc comment and the version variable
-internal/cli/       Kong grammar, Runtime, one file per command group
-internal/applemusic/HTTP client: search, library playlists, pagination, retry
-internal/musicapp/  the local Music app, driven by AppleScript
-internal/auth/      ES256 developer token, browser handshake, token cache
-internal/config/    XDG discovery, config.json, credential resolution
-internal/tracklist/ the "Artist - Title | hint" format: parse, write
-internal/match/     scoring a catalogue result against a wanted line
-```
-
-## Commands
-
-```bash
-make ci                     # codefix + format + lint + test (USE THIS)
-make test                   # tests with race detection and coverage
-make lint -j8               # parallelize linting
-make build                  # → build/musickit
-make run                    # dry-run import of summer-playlist-2026.txt
-make vulncheck              # govulncheck (needs network; not in `make ci`)
-FORCE_UPDATE=1 make lint    # reinstall linters
-```
-
-Always use Makefile targets. `make ci` is the single command to validate changes.
+This file provides guidance to AI agents when working with code in this repository. See
+[README.md](README.md) for what musickit does and how to run it; `docs/` (table below) for the
+design reasoning; the code itself for structure and idiom.
 
 ## Constraints That Look Like Bugs
 
-- **The API cannot remove a track, rename a playlist or delete one.** Apple documents no such
-  endpoint — the only `DELETE`s in the whole API are personal ratings. `remove`, `rename` and
-  `delete` therefore drive the local Music app through `osascript`, which is why they are
-  macOS-only. Do not go looking for the endpoint; it is not there.
-- **The browser auth step cannot be removed.** A Music-User-Token is required for every library
-  write and only MusicKit JS can mint one. Hence the one-page localhost server in
-  `auth.Authorizer`. Catalogue _reads_ need only the developer token, which is why `search` runs
-  before authorisation.
+Facts about Apple's platform, not artifacts of this code — do not go looking for a way around them.
+
+- **The API cannot remove a track, rename a playlist or delete one.** No such endpoint exists;
+  `remove`, `rename` and `delete` drive the local Music app over AppleScript instead, which is why
+  they are macOS-only.
+- **The browser auth step cannot be removed.** Only MusicKit JS can mint a Music-User-Token; hence
+  the one-page localhost server in `auth.Authorizer`.
 - **The ES256 signature must be raw `r||s`, never ASN.1.** `ecdsa.SignASN1` produces a token Apple
-  rejects with an opaque 401. `TestDeveloperTokenIsValidES256` pins the 64-byte length and verifies
-  against the public key; do not relax it.
-- **AppleScript is passed on stdin with names in `argv`.** Never interpolate a playlist or track
-  name into a script, and never write `--` inside a `(* *)` block comment: it opens a nested line
-  comment that swallows the closing delimiter.
-- **Removal re-checks before it deletes.** Go sends `index:persistentID` pairs highest-index-first;
-  the script verifies the ID at that index and reports `SKIP` rather than deleting the wrong song.
-  A skip is warned about even under `--quiet`.
-- **Accent folding is hand-rolled** (`foldTable`) because `golang.org/x/text` would be a dependency
-  this repo does not want. Add runes to the table rather than the dependency.
+  rejects with an opaque 401. `TestDeveloperTokenIsValidES256` pins this; do not relax it.
+- **Never interpolate a playlist or track name into an AppleScript**, and never write `--` inside a
+  `(* *)` block comment — it opens a nested line comment that swallows the closing delimiter.
 - **`make run` is a dry run on purpose** — the wet import writes to a real Apple Music library.
-- **Matching reports a miss rather than adding the wrong track.** The `match.Score` penalties
-  (karaoke −200, unrequested live −35, unknown artist −15) and the `MinScore` floor exist so a bad
-  match never lands silently in someone's playlist. A change here needs a test row, and a re-run of
-  `make run` against the 50-track list, which must still match 50.
+- **Matching reports a miss rather than adding the wrong track.** A `match.Score` weight change
+  needs a test row and a `make run` that still matches 50 of 50 against the checked-in sample list.
 
-## Unix Conventions
+Full reasoning: [docs/music-app.md](docs/music-app.md), [docs/authentication.md](docs/authentication.md),
+[docs/matching.md](docs/matching.md).
 
-- stdout is data, stderr is narration. Records are tab-separated, or one JSON object per line
-  under `--json`. `--quiet` silences stderr progress but never a warning and never stdout.
-- Track lists come from arguments, `--from FILE`, `--from -`, or a piped stdin — in that order. A
-  terminal on stdin is never read from; the command says how to give it a list instead.
-- One track-list format everywhere, so `playlist export A | playlist add B` works.
-- `--dry-run` writes nothing; `--yes` pre-answers prompts; with no terminal a destructive command
-  refuses rather than guessing.
-- Exit codes: 0 success, 1 error, 2 usage, 3 finished with unmatched tracks, 130 interrupted.
+## Traps `make lint`/`make ci` won't explain
+
+- gocritic runs with `builtinShadow,importShadow` — never name a local after a builtin or an
+  imported package (`real`, `min`, `path`). This bites more often than expected.
+- `#nosec Gxxx -- reason` inline, with the reason, for operator-supplied paths gosec flags.
+- Tests never touch the network or a browser — `cli.Run`'s `configure func(*Runtime)` hook and the
+  fakes described in [docs/development.md](docs/development.md) are the seams to use instead.
 
 ## Secrets
 
-`*.p8` is gitignored and the key lives in `~/.config/musickit/`, never in the tree. Apple allows a
-single download per key, so a lost `.p8` means a new key. Never print a token or key to any stream.
+`*.p8` is gitignored and lives in `~/.config/musickit/`, never in the tree. Apple allows a single
+download per key. Never print a token or key to any stream.
 
-## Config
+## Documentation
 
-`--config-dir`, else `$MUSICKIT_CONFIG_DIR`, else `$XDG_CONFIG_HOME/musickit`, else
-`~/.config/musickit` — holding `config.json`, `AuthKey.p8`, `user-token`. Files are unhidden and
-short-named; a relative `privateKey` resolves against the config dir, not the cwd.
+`docs/` is part of the code. A change that alters behaviour, structure or reasoning updates the
+matching document **in the same change** — not later, not in a follow-up.
 
-## Conventions
+| Document                 | Owns                                                                      |
+| ------------------------ | ------------------------------------------------------------------------- |
+| `docs/README.md`         | what musickit is; which capability uses which backend                     |
+| `docs/architecture.md`   | packages, dependency rules, `Runtime`, command dispatch, client behaviour |
+| `docs/authentication.md` | the two tokens, config discovery, credential handling                     |
+| `docs/music-app.md`      | the AppleScript layer and the removal protocol                            |
+| `docs/matching.md`       | the track-list format and the scoring weights                             |
+| `docs/interface.md`      | streams, record shapes, input sources, exit codes                         |
+| `docs/development.md`    | testing seams, adding a command, conventions, traps                       |
 
-- Go 1.26+, `any` over `interface{}`, errors wrapped with `fmt.Errorf("context: %w", err)` where
-  the wrap adds something the callee did not already say
-- Error strings lowercase (ST1005) — reword rather than capitalise, even for "Apple"
-- Never name a local after a builtin or an imported package (`real`, `min`, `path`) — `make lint`
-  runs gocritic with `builtinShadow,importShadow` and will fail the build
-- `#nosec Gxxx -- reason` inline, with the reason, for the operator-supplied paths gosec flags
-- Playlist writes chunk at `applemusic.PageLimit` (100), Apple's per-request maximum
-- Tests never touch the network and never open a browser: the API is an `httptest` server, the
-  Music app a fake `Runner`, and `cli.Run` takes a `configure func(*Runtime)` seam for both.
-  Anything needing Apple is exercised by hand with `make run`
+Two rules: never restate `--help` — document the _why_, the binary documents the _what_ — and prune
+as well as add, since a document describing behaviour that no longer exists is worse than none.
+Verify a claim against the code before writing it.
 
 ## Workflow
 
 1. Minimal, focused change
 2. Add or update tests
-3. `make ci` must pass
-4. Draft and print the commit message; the user commits manually
+3. Update the affected `docs/` page — same change, not a follow-up
+4. `make ci` must pass
+5. Draft and print the commit message; the user commits manually
