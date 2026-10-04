@@ -115,4 +115,4 @@ dependency should need an argument at least that good.
 
 ## Workflow
 
-Minimal focused change → tests → `make ci` green → draft the commit message. The user commits.
+Minimal focused change → tests → `make ci` green → commit. Pushing waits to be asked.

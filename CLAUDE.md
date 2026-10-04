@@ -62,4 +62,4 @@ Verify a claim against the code before writing it.
 2. Add or update tests
 3. Update the affected `docs/` page — same change, not a follow-up
 4. `make ci` must pass
-5. Draft and print the commit message; the user commits manually
+5. Commit (`type(scope): summary`, with the session's trailers); never push unless asked
