@@ -102,3 +102,13 @@ Run `musickit --help` or `musickit <command> --help` for the full flag reference
 `docs/` holds the design reasoning that doesn't belong in `--help` — the package layout, the
 two-token auth flow, the AppleScript safety protocol, the matching weights, and the testing
 strategy. Start at [docs/README.md](docs/README.md).
+
+## License
+
+musickit is **dual-licensed**:
+
+- **Noncommercial use** (personal projects, hobby use, education, research, and other noncommercial
+  purposes) is free under the [PolyForm Noncommercial License 1.0.0](LICENSE).
+- **Commercial use**: any use that is not a noncommercial purpose, including use in or for a
+  for-profit business, product, or service, requires a separate commercial license. See
+  [LICENSE-COMMERCIAL.md](LICENSE-COMMERCIAL.md).
