@@ -9,6 +9,10 @@ $ musickit search "Todd Terje Inspector Norse" --json | jq -r '.[0].attributes.n
 Inspector Norse
 ```
 
+**Status:** working and in daily use. All commands are implemented, the matching engine is checked against a
+50-track regression list, and the tests run with no network and no Music app. Remove, rename and delete need
+macOS and a synced Music library.
+
 ## Why it's a little unusual
 
 Apple's Music API can create playlists and add tracks to them, but it has no endpoint to remove a
@@ -34,6 +38,9 @@ go install ./cmd/musickit   # or: make build → build/musickit
 
 Requires Go 1.26. The only third-party dependency is [Kong](https://github.com/alecthomas/kong)
 for the command grammar — everything else is the standard library.
+
+For development, `make help` lists every command and `make ci` is the gate (lint, vulnerability scan and tests);
+see [docs/development.md](docs/development.md).
 
 ## Setting up Apple Music access
 
