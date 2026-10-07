@@ -1,3 +1,10 @@
+.DS_Store
+.build/
+.claude/settings.local.json
+.claude/worktrees/
+.superpowers/
+.worktrees/
+
 # MusicKit private key — never commit this, Apple only lets you download it once
 *.p8
 
@@ -11,5 +18,3 @@ bench.txt
 bench-new.txt
 cover.out
 coverage.html
-
-.DS_Store
