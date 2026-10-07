@@ -119,8 +119,7 @@ func Run(ctx context.Context, argv []string, stdio IO, version string, configure
 	if hint := hintFor(err); hint != "" {
 		fmt.Fprintf(stdio.Err, "  %s\n", hint)
 	}
-	var incomplete *incompleteError
-	if errors.As(err, &incomplete) {
+	if _, ok := errors.AsType[*incompleteError](err); ok {
 		return ExitIncomplete
 	}
 	return ExitError

@@ -1215,8 +1215,7 @@ func TestIncompleteError(t *testing.T) {
 		t.Errorf("incomplete(0, 10) = %v, want nil", err)
 	}
 	err := incomplete(2, 10)
-	var target *incompleteError
-	if !errors.As(err, &target) {
+	if _, ok := errors.AsType[*incompleteError](err); !ok {
 		t.Fatalf("incomplete(2, 10) = %v, want an *incompleteError", err)
 	}
 	if !strings.Contains(err.Error(), "2 of 10") {
