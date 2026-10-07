@@ -1,4 +1,4 @@
-module musickit
+module github.com/monolithiclab/musickit
 
 go 1.26
 

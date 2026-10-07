@@ -22,9 +22,9 @@ import (
 
 	"github.com/alecthomas/kong"
 
-	"musickit/internal/applemusic"
-	"musickit/internal/config"
-	"musickit/internal/musicapp"
+	"github.com/monolithiclab/musickit/internal/applemusic"
+	"github.com/monolithiclab/musickit/internal/config"
+	"github.com/monolithiclab/musickit/internal/musicapp"
 )
 
 // Exit codes. 2 for usage and 130 for interruption are the usual shell

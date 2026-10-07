@@ -19,7 +19,7 @@ package main
 import (
 	"os"
 
-	"musickit/internal/cli"
+	"github.com/monolithiclab/musickit/internal/cli"
 )
 
 // version is stamped by the build: -ldflags "-X main.version=$(VERSION)".

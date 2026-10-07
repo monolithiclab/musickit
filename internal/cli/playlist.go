@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"musickit/internal/applemusic"
-	"musickit/internal/tracklist"
+	"github.com/monolithiclab/musickit/internal/applemusic"
+	"github.com/monolithiclab/musickit/internal/tracklist"
 )
 
 // PlaylistCmd groups the playlist verbs.

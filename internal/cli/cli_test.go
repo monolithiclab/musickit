@@ -17,8 +17,8 @@ import (
 	"testing"
 	"time"
 
-	"musickit/internal/applemusic"
-	"musickit/internal/musicapp"
+	"github.com/monolithiclab/musickit/internal/applemusic"
+	"github.com/monolithiclab/musickit/internal/musicapp"
 )
 
 // ===== fakes =====

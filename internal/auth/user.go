@@ -15,7 +15,7 @@ import (
 	"strings"
 	"time"
 
-	"musickit/internal/config"
+	"github.com/monolithiclab/musickit/internal/config"
 )
 
 // DefaultAuthPort is the loopback port the authorisation page is served on.

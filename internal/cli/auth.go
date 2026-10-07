@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"musickit/internal/applemusic"
-	"musickit/internal/auth"
-	"musickit/internal/config"
+	"github.com/monolithiclab/musickit/internal/applemusic"
+	"github.com/monolithiclab/musickit/internal/auth"
+	"github.com/monolithiclab/musickit/internal/config"
 )
 
 // AuthCmd runs, or clears, the browser authorisation.

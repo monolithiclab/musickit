@@ -7,10 +7,10 @@ import (
 	"os"
 	"strings"
 
-	"musickit/internal/applemusic"
-	"musickit/internal/config"
-	"musickit/internal/match"
-	"musickit/internal/tracklist"
+	"github.com/monolithiclab/musickit/internal/applemusic"
+	"github.com/monolithiclab/musickit/internal/config"
+	"github.com/monolithiclab/musickit/internal/match"
+	"github.com/monolithiclab/musickit/internal/tracklist"
 )
 
 // Source is the track-list input shared by the commands that take one.

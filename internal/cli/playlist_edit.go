@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"musickit/internal/applemusic"
-	"musickit/internal/match"
-	"musickit/internal/musicapp"
-	"musickit/internal/tracklist"
+	"github.com/monolithiclab/musickit/internal/applemusic"
+	"github.com/monolithiclab/musickit/internal/match"
+	"github.com/monolithiclab/musickit/internal/musicapp"
+	"github.com/monolithiclab/musickit/internal/tracklist"
 )
 
 // PlaylistCreateCmd creates a playlist, optionally filling it from a list.

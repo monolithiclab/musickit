@@ -6,8 +6,8 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"musickit/internal/applemusic"
-	"musickit/internal/tracklist"
+	"github.com/monolithiclab/musickit/internal/applemusic"
+	"github.com/monolithiclab/musickit/internal/tracklist"
 )
 
 func track(artist, title, album string) applemusic.Track {
