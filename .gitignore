@@ -14,7 +14,7 @@
 
 # generated
 musickit-match-report.tsv
-bench.txt
+bench-base.txt
 bench-new.txt
 cover.out
-coverage.html
+cover.out.tmp

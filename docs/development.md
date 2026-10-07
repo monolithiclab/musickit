@@ -3,15 +3,16 @@
 ## Build and check
 
 ```sh
-make ci          # codefix + format + lint + test — the single command that validates a change
-make test        # race detector, coverage summary per function
-make lint -j8
+make ci          # lint + test, never mutating — the single command that validates a change
+make test        # race detector and total coverage
+make lint        # gofmt, vet, staticcheck, golangci-lint, gosec, gocritic, govulncheck (needs network), go mod tidy -diff
+make lint-fix    # go fix, then gofmt -s
 make build       # → build/musickit
 make run         # dry-run import of the 50-track sample list
-make vulncheck   # govulncheck; needs network, deliberately not in `make ci`
 ```
 
-Always go through the Makefile; the flags matter. `FORCE_UPDATE=1 make lint` reinstalls the linters.
+Always go through the Makefile; the flags matter. The linters are pinned in `tools/go.mod` and the Go
+toolchain in `go.mod`; `make` runs exactly those versions.
 
 `make run` is a **dry run on purpose**. The wet version writes a playlist to a real Apple Music
 library, which is not something a bare `make run` should do by surprise. It doubles as the
