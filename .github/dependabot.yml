@@ -1,0 +1,26 @@
+version: 2
+
+updates:
+  # The repo's own dependencies and the pinned lint tools (tools/go.mod).
+  - package-ecosystem: gomod
+    directories: ["/", "/tools"]
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      go-minor-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: "chore(ci-deps)"
+    groups:
+      actions-minor-patch:
+        update-types: [minor, patch]
