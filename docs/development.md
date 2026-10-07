@@ -5,7 +5,7 @@
 ```sh
 make ci          # lint + test, never mutating — the single command that validates a change
 make test        # race detector and total coverage
-make lint        # gofmt, vet, staticcheck, golangci-lint, gosec, gocritic, govulncheck (needs network), go mod tidy -diff
+make lint        # golangci-lint (gofmt -s, vet, staticcheck, gosec, gocritic shadow checks), govulncheck (needs network), go mod tidy -diff
 make lint-fix    # go fix, then gofmt -s
 make build       # → build/musickit
 make run         # dry-run import of the 50-track sample list
