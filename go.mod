@@ -1,5 +1,7 @@
 module github.com/monolithiclab/musickit
 
-go 1.26
+go 1.26.0
 
-require github.com/alecthomas/kong v1.16.1 // indirect
+toolchain go1.26.8
+
+require github.com/alecthomas/kong v1.16.1
