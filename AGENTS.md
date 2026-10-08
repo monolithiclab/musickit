@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 musickit is a single-binary Go CLI that manages Apple Music playlists, driving the HTTP API for additive
 work and the local Music app over AppleScript for the rest. See [README.md](README.md) for what it does and
