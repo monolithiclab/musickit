@@ -67,4 +67,4 @@ Verify a claim against the code before writing it.
 
 1. Minimal change, with tests, plus the owning `docs/` page in the same change
 2. `make ci` green
-3. Commit (`type(scope): summary`) with the session's trailers; push only when asked
+3. Commit (`type(scope): summary`) with the session's trailers, then push
